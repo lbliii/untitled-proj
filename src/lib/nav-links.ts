@@ -10,6 +10,34 @@ export const navLinks = [
 	},
 
 	{
+		name: 'Forums',
+		href: '/forums',
+		icon: 'material-symbols:forum',
+		new: false
+	},
+
+	{
+		name: 'Characters',
+		href: '/characters',
+		icon: 'material-symbols:person',
+		new: false
+	},
+
+	{
+		name: 'Wanted Ads',
+		href: '/wanted-ads',
+		icon: 'material-symbols:money',
+		new: false
+	},
+
+	{
+		name: 'Threads',
+		href: '/threads',
+		icon: 'material-symbols:forum',
+		new: false
+	},
+
+	{
 		name: 'Guestbook',
 		href: '/guestbook',
 		icon: 'fluent-emoji-high-contrast:ledger',

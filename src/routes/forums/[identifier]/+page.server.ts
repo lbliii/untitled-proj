@@ -8,7 +8,7 @@ export async function load({ params }) {
 
   // Try to fetch by ID
   forumData = await pb.collection('forums').getOne(identifier, {
-    expand: 'genre,subforums',
+    expand: 'genre,subforums,owner',
   }).catch(() => null)
 
   // If not found by ID, try to fetch by slug
@@ -44,6 +44,7 @@ export async function load({ params }) {
       genre: forumData.expand?.genre?.name || null,
       createdAt: forumData.created,
       slug: forumData.slug,
+      owner: forumData.expand?.owner?.id || forumData.owner || null
     })
 
     console.log('Validated forum data:', JSON.stringify(validatedForum, null, 2))

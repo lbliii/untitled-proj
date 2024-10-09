@@ -1,28 +1,25 @@
 import { json } from '@sveltejs/kit'
 import { pb } from '$lib/pocketbase'
-import { forumSchema, forumsResponseSchema } from '$lib/schemas/forumSchemas'
+import { forumSchema } from '$lib/schemas/forumSchemas'
 
 export async function GET() {
   try {
-    const records = await pb.collection('forums').getFullList({
+    const forums = await pb.collection('forums').getFullList({
       sort: '-created',
-      expand: 'genre',
-    })
+      expand: 'owner,genre,subforums',
+    });
 
-    const forums = records.map((forum) => ({
-      id: forum.id,
-      name: forum.name,
-      description: forum.description,
+    const validatedForums = forums.map(forum => forumSchema.parse({
+      ...forum,
+      owner: forum.expand?.owner?.id || forum.owner || null,
       genre: forum.expand?.genre?.name || null,
-      createdAt: forum.created
-    }))
+      // ... other fields ...
+    }));
 
-    const validatedForums = forumsResponseSchema.parse({ forums })
-
-    return json(validatedForums)
+    return json({ forums: validatedForums });
   } catch (error) {
-    console.error('Error fetching forums:', error)
-    return json({ error: 'Failed to fetch forums' }, { status: 500 })
+    console.error('Error fetching forums:', error);
+    return json({ error: 'Failed to fetch forums' }, { status: 500 });
   }
 }
 

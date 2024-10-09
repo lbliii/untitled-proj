@@ -1,5 +1,4 @@
 export * from './userSchemas'
-export * from './forumSchemas'
 export * from './genreSchemas'
 export * from './characterSchemas'
 export * from './wantedAdSchemas'

@@ -2,21 +2,20 @@
   export let data;
   const { forum, user } = data;
 
-  $: canDelete = user && (user.id === forum.user || user.isAdmin);
+  $: owner = user && (user.id === forum.owner || user.role === 'admin_global');
 </script>
 
 <h1>{forum.name}</h1>
 <p>{forum.description}</p>
-<a href="/forums/{forum.id}/edit">Edit Forum</a>
 {#if forum.genre}
   <p>Genre: {forum.genre}</p>
 {/if}
-<p>Created: {new Date(forum.createdAt).toLocaleDateString()}</p>
+<p>Created: {new Date(forum.createdAt ?? 0).toLocaleDateString()}</p>
 
 <h2>Subforums</h2>
-{#if forum.subforums.length > 0}
+{#if (forum.subforums?.length ?? 0) > 0}
   <ul>
-    {#each forum.subforums as subforum}
+    {#each forum.subforums ?? [] as subforum}
       <li>
         <a href="/forums/{subforum.slug}">{subforum.name}</a>
       </li>
@@ -26,8 +25,10 @@
   <p>No subforums found.</p>
 {/if}
 
-{#if canDelete}
+{#if owner}
 <form method="POST" action="?/delete">
   <button type="submit">Delete Forum</button>
   </form>
+
+<a href="/forums/{forum.id}/edit">Edit Forum</a>
 {/if}

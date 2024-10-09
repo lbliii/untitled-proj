@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { UserSchema } from './userSchemas'
 
 export const forumSchema = z.object({
   id: z.string(),
@@ -8,7 +7,7 @@ export const forumSchema = z.object({
   genre: z.string().nullable(),
   createdAt: z.string().optional(),
   slug: z.string().optional(),
-  owner: z.string().or(UserSchema).optional(),
+  owner: z.string().nullable()  // Allow null values for owner
 })
 
 export const subforumSchema = forumSchema.extend({
@@ -44,4 +43,5 @@ export const createForumSchema = z.object({
   image: z.instanceof(Blob).optional(),
   premise: z.string().optional(),
   guidelines: z.string().optional(),
+  owner: z.string().optional()
 })

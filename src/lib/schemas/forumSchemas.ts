@@ -45,3 +45,5 @@ export const createForumSchema = z.object({
   guidelines: z.string().optional(),
   owner: z.string().optional()
 })
+
+export type Forum = z.infer<typeof forumSchema>

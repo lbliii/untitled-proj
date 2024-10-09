@@ -10,7 +10,7 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 # PocketBase specific ignores
-/pb_data
-/pb_migrations
+pb-database/pb_data
+pb-database/pb_migrations
 pocketbase
 pocketbase.exe

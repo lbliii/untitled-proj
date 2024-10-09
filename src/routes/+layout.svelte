@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <div class="max-w-2xl p-2 mx-auto w-full">
+  <div class="max-w-full p-2 mx-auto w-full">
     <slot />
   </div>
 

@@ -1,5 +1,5 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { updatePasswordSchema } from '$lib/schemas';
+import { updatePasswordSchema } from '$lib/schemas/userSchemas';
 import { validateData } from '$lib/utils';
 
 export const load = ({ locals }) => {

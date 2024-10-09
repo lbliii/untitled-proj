@@ -190,7 +190,7 @@
 
   <!-- TODO: This could be cleaner -->
   <div
-    class="fixed bottom-4 flex items-center justify-center w-full max-w-2xl transition-opacity duration-700"
+    class="fixed bottom-4 flex items-center justify-center w-full max-w-full transition-opacity duration-700"
   >
     <div class="flex w-full justify-end">
       <button

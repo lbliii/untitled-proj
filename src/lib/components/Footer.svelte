@@ -3,7 +3,7 @@
 </script>
 
 <footer class="footer footer-center rounded bg-base-100 text-base-content">
-  <div class="max-w-2xl mx-auto w-full">
+  <div class="max-w-full mx-auto w-full">
     <nav class="flex justify-center p-5">
       <div class="flex gap-1">
         <div>Made with</div>

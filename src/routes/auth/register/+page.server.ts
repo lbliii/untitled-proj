@@ -1,5 +1,5 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { registerUserSchema } from '$lib/schemas';
+import { registerUserSchema } from '$lib/schemas/userSchemas';
 import { validateData } from '$lib/utils';
 
 export const actions = {

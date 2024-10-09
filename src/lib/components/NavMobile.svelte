@@ -72,7 +72,7 @@
   }
 </script>
 
-<div class="drawer drawer-end max-w-2xl mx-auto w-full">
+<div class="drawer drawer-end max-w-full mx-auto w-full">
   <input id="primary-drawer" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content flex flex-col">
     <!-- Navbar -->
@@ -81,7 +81,7 @@
         <a
           href={$currentUser ? '/' : '/'}
           class="btn btn-primary text-xl"
-          aria-label="Home">spatz</a
+          aria-label="Home">Emdash</a
         >
       </div>
 
@@ -236,7 +236,7 @@
 </div>
 
 <!-- Theme Drawer -->
-<div class="drawer max-w-2xl mx-auto w-full">
+<div class="drawer max-w-full mx-auto w-full">
   <input id="theme-drawer" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content">
     <!-- Hidden content -->

@@ -54,12 +54,12 @@
   }
 </script>
 
-<div class="navbar max-w-2xl mx-auto text-base-content">
+<div class="navbar max-w-full mx-auto text-base-content">
   <div class="flex-1">
     <a
       href={$currentUser ? '/' : '/'}
       class="btn btn-primary text-xl"
-      aria-label="Home">spatz</a
+      aria-label="Home">Emdash</a
     >
   </div>
   <div class="flex-none gap-2">

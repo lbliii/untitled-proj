@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Forum } from '$lib/schemas/forumSchemas';
+  import type { Forum } from '$lib/schemas/forum';
   import ForumList from './ForumList.svelte';
 
   export let genre: string;

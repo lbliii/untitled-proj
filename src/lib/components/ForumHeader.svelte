@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { forumSchema } from '$lib/schemas/forumSchemas';
+  import { forumSchema } from '$lib/schemas/forum';
   import type { TypeOf } from 'zod';
   import ForumActions from './ForumActions.svelte';
-  import type { User } from '$lib/schemas/userSchemas';
+  import type { User } from '$lib/schemas/user';
 
   export let forum: TypeOf<typeof forumSchema>;
   export let user: User | null;

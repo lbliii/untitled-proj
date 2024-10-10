@@ -1,4 +1,4 @@
-import { createForumSchema } from '$lib/schemas/forumSchemas'
+import { createForumSchema } from '$lib/schemas/forum'
 import { superValidate } from 'sveltekit-superforms/server'
 import { fail, redirect } from '@sveltejs/kit'
 import { pb } from '$lib/pocketbase'

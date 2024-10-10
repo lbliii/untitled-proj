@@ -1,35 +1,53 @@
 import type { PageServerLoad } from './$types';
-import { forumsResponseSchema } from '$lib/schemas/forumSchemas';
+import { pb } from '$lib/pocketbase';
+import { forumsResponseSchema } from '$lib/schemas/forum';
+import type { Forum } from '$lib/schemas/forum';
+import { sortStrings, sortByName } from '$lib/schemas/utils';
 
-export const load: PageServerLoad = async (event) => {
+export const load: PageServerLoad = async ({ locals }) => {
   try {
-    // Fetch data from the internal API
-    const response = await event.fetch('/api/forums');
+    // Fetch forums sorted alphabetically by name, expand the genre relation
+    const forums: Forum[] = await pb.collection('forums').getFullList<Forum>({
+      sort: 'name',
+      filter: 'parent_forum = ""', // Exclude forums without a parent_forum
+      expand: 'genre' // Expand the genre relation to get genre details
+    });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to fetch forums.');
-    }
-
-    const data = await response.json();
-
-    // Validate the fetched data using the Zod schema
-    const parsed = forumsResponseSchema.safeParse(data);
+    // Validate the fetched forums using Zod schema
+    const parsed = forumsResponseSchema.safeParse({ forums });
 
     if (!parsed.success) {
-      console.error('Zod Validation Error:', parsed.error);
-      throw new Error('Invalid forum data received.');
+      throw new Error('Invalid forum data');
+    }
+
+    // Group forums by genre name
+    const groupedForums: { [genre: string]: Forum[] } = forums.reduce((acc, forum) => {
+      const genre = forum.expand?.genre?.name || 'Uncategorized';
+      if (!acc[genre]) {
+        acc[genre] = [];
+      }
+      acc[genre].push(forum);
+      return acc;
+    }, {} as { [genre: string]: Forum[] });
+
+    // Sort the genres alphabetically (strings)
+    const sortedGenres = Object.keys(groupedForums).sort(sortStrings);
+
+    // Sort each forum list within genres alphabetically by name (objects)
+    for (const genre of sortedGenres) {
+      groupedForums[genre].sort(sortByName);
     }
 
     return {
-      forums: parsed.data.forums
+      forumsByGenre: groupedForums,
+      sortedGenres,
+      error: null
     };
   } catch (error) {
-    console.error('Load Function Error:', error);
-    // Optionally, you can return an empty array or handle the error as needed
     return {
-      forums: [],
-      error: error.message
+      forumsByGenre: {},
+      sortedGenres: [],
+      error: (error as Error).message || 'Failed to load forums'
     };
   }
 };

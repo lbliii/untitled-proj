@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import type { Forum } from '$lib/schemas/forumSchemas';
-  import type { User } from '$lib/schemas/userSchemas'; 
+  import type { Forum } from '$lib/schemas/forum';
+  import type { User } from '$lib/schemas/user'; 
 
   export let user: User | null;
   export let forum: Forum;

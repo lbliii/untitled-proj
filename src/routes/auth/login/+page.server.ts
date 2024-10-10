@@ -1,7 +1,7 @@
 import type { Actions } from './$types'
 import { error, fail, redirect } from '@sveltejs/kit';
 import { validateData } from '$lib/utils';
-import { loginUserSchema } from '$lib/schemas/userSchemas';
+import { loginUserSchema } from '$lib/schemas/user';
 
 export const actions: Actions = {
 	login: async ({ request, locals }) => {

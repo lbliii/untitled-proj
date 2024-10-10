@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { error, fail, redirect } from '@sveltejs/kit';
-import { updateEmailSchema, updateUsernameSchema } from '$lib/schemas/userSchemas';
+import { updateEmailSchema, updateUsernameSchema } from '$lib/schemas/user';
 import { validateData } from '$lib/utils';
 
 export const load = ({ locals }) => {

@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { pb } from '$lib/pocketbase';
-import { forumSchema } from '$lib/schemas/forumSchemas';
+import { forumSchema } from '$lib/schemas/forum';
 import { genreSchema } from '$lib/schemas/genreSchemas';
 
 export const GET: RequestHandler = async () => {

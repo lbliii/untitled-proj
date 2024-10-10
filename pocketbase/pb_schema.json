@@ -593,16 +593,6 @@
       },
       {
         "system": false,
-        "id": "fld_forums_is_global",
-        "name": "is_global",
-        "type": "bool",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {}
-      },
-      {
-        "system": false,
         "id": "fld_forums_image",
         "name": "image",
         "type": "file",
@@ -668,22 +658,6 @@
       {
         "system": false,
         "id": "rd0zx9tq",
-        "name": "owner",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "_pb_users_auth_",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "fld_forums_owner",
         "name": "owner",
         "type": "relation",
         "required": true,
@@ -1636,7 +1610,7 @@
       {
         "system": false,
         "id": "fld_ur_forum",
-        "name": "forum",
+        "name": "forums",
         "type": "relation",
         "required": false,
         "presentable": false,
@@ -1645,7 +1619,7 @@
           "collectionId": "col_forums_12345",
           "cascadeDelete": false,
           "minSelect": null,
-          "maxSelect": 1,
+          "maxSelect": null,
           "displayFields": null
         }
       }

@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { threadSchema } from './threadSchemas'
-import { genreSchema } from './genreSchemas'
+import { threadSchema } from './thread'
+import { genreSchema } from './genre'
 
 export const forumSchema = z.object({
   id: z.string(),

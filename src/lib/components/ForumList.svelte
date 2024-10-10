@@ -22,8 +22,8 @@
             <p class="text-sm line-clamp-2">{forum.description}</p>
           {/if}
           <div class="flex flex-wrap gap-2 mt-2">
-            {#if forum.genre}
-              <span class="text-xs bg-white/20 px-2 py-1 rounded">{forum.genre}</span>
+            {#if forum}
+              <span class="text-xs bg-white/20 px-2 py-1 rounded">Public</span>
             {/if}
           </div>
         </div>

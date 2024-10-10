@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { pb } from '$lib/pocketbase'
-import { forumSchema } from '$lib/schemas/forumSchemas'
+import { forumSchema } from '$lib/schemas/forum'
 
 export async function GET() {
   try {

@@ -1,4 +1,4 @@
-import { createForumSchema } from '$lib/schemas/forumSchemas'
+import { createForumSchema } from '$lib/schemas/forum'
 import { fail } from '@sveltejs/kit'
 
 export async function load({ params, locals: { pb } }) {

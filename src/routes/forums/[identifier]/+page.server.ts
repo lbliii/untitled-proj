@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit'
 import { pb } from '$lib/pocketbase'
-import { forumResponseSchema, forumSchema } from '$lib/schemas/forumSchemas'
-import { threadSchema } from '$lib/schemas/threadSchemas'
+import { forumResponseSchema, forumSchema } from '$lib/schemas/forum'
+import { threadSchema } from '$lib/schemas/thread'
 
 export async function load({ params, url }) {
   const { identifier } = params
@@ -70,14 +70,15 @@ export async function load({ params, url }) {
     // Validate threads
     const validatedThreads = threadsResponse.items.map(thread => threadSchema.parse(thread))
 
-    // Validate the entire response
+    // Validate the entire response without including the user to prevent overriding layout data
     const validatedResponse = forumResponseSchema.parse({
       forum: validatedForum,
       subforums: validatedSubforums,
       threads: validatedThreads,
       currentPage: page,
       totalPages: Math.ceil(threadsResponse.totalItems / perPage),
-      user: pb.authStore.model
+      // Removed the user field to avoid overriding the layout's user data
+      // You can access the user from locals in your frontend components
     })
 
     console.log('Validated response:', JSON.stringify(validatedResponse, null, 2))

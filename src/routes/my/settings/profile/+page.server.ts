@@ -2,7 +2,7 @@
 
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { updateProfileSchema } from '$lib/schemas/userSchemas';
+import { updateProfileSchema } from '$lib/schemas/user';
 import { validateData } from '$lib/utils';
 import { serialize } from 'object-to-formdata';
 

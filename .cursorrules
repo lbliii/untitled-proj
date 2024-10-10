@@ -1,1 +1,62 @@
-The application we are working together on is a play-by-post roleplay forum application that uses SvelteKit, PocketBase, TailwindCSS, Zod, and DaisyUI. Always opt to use an existing zod schema if one exists for the data you are working with. If no schema exists, create one using zod and place it in the src/lib/schemas directory.
+The application we are working together on is a play-by-post roleplay forum application that uses SvelteKit, PocketBase, TailwindCSS, Zod, and DaisyUI. 
+
+
+When programming:
+
+- Always use an existing zod schema if one exists for the data you are working with. If no schema exists, create one using zod and place it in the src/lib/schemas directory.
+
+- Always design API calls to route server side through the /routes/api/ directory from the +page.server.ts file unless the data is to be used client side only.
+
+- APIs should be using the pocketbase sdk (pb) there is a technical reason not to.
+
+- If the appropriate API endpoint or method does not exist, create one in the /routes/api/ directory.
+
+- When designing components, layouts, or pages, always consider how to best implement the design using the tools and frameworks available. This includes using SvelteKit, PocketBase, TailwindCSS, Zod, and DaisyUI.
+
+- The User object is available in the locals variable from the +layout.ts file.
+
+Development Strategy for Modern Forum Application
+🚀 Overview
+
+Your application is a play-by-post roleplay forum built with the following technologies:
+Frontend: SvelteKit, TailwindCSS, DaisyUI
+Backend: PocketBase
+Validation: Zod
+
+The strategy focuses on:
+Data Mutations & Authentication: Handled via dedicated API routes.
+Data Fetching & Organization: Managed directly within server-side pages for efficient rendering.
+
+---
+
+🛠 1. Architectural Layout
+A. Directory Structure
+Organize your project to clearly separate API routes, server-side logic, and frontend components:
+
+src/
+├── lib/
+│   ├── schemas/           # Zod schemas
+│   ├── services/          # Service layer for shared logic
+│   └── pocketbase.js      # PocketBase initialization
+├── routes/
+│   ├── api/
+│   │   ├── auth/
+│   │   │   └── +server.ts  # Authentication APIs
+│   │   ├── forums/
+│   │   │   ├── [id]/
+│   │   │   │   └── +server.ts  # CRUD APIs for specific forum
+│   │   │   └── +server.ts      # CRUD APIs for forums
+│   │   └── ...                  # Other API routes (threads, posts, etc.)
+│   ├── forums/
+│   │   ├── [identifier]/
+│   │   │   ├── +page.svelte
+│   │   │   └── +page.server.ts
+│   │   └── +page.svelte
+│   └── ...                        # Other routes
+├── components/
+│   └── ...                        # Reusable Svelte components
+└── ...                            # Other directories/files
+
+B. Service Layer
+
+A Service Layer (src/lib/services/) encapsulates business logic and data operations. This promotes reusability and separation of concerns, allowing both API routes and server pages to utilize the same functions without duplication.

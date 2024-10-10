@@ -5,21 +5,6 @@
   import SpatzLanding from '$lib/components/SpatzLanding.svelte'
   import ForumTile from '$lib/components/ForumTile.svelte'
 
-  interface Forum {
-    id: string;
-    name: string;
-    description: string;
-    genre: string | null;
-    createdAt: string;
-  }
-
-  let forums: Forum[] = [];
-
-  onMount(async () => {
-    const response = await fetch('/api/forums');
-    const data = await response.json();
-    forums = data.forums;
-  });
 </script>
 
 <!-- Home page. Dynamically choose which content 
@@ -32,11 +17,7 @@
     <!-- If user is logged in, show the marketing content -->
     <!-- <SpatzMarketing />  -->
     <h2>Forums</h2>
-    <div class="forum-grid">
-      {#each forums as forum (forum.id)}
-        <ForumTile {forum} />
-      {/each}
-    </div>
+
   {/if}
 </div>
 

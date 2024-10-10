@@ -1,15 +1,14 @@
 import { json } from '@sveltejs/kit'
-import { pb } from '$lib/pocketbase'
-import { forumSchema } from '$lib/schemas/forum'
+import { updateForum, deleteForum, getForumById } from '$lib/services/forum'
 
 export async function GET({ params }) {
   try {
     const { id } = params
-    const record = await pb.collection('forums').getOne(id)
-    return json(record)
+    const forum = await getForumById(id)
+    return json(forum)
   } catch (error) {
     console.error('Error fetching forum:', error)
-    return json({ error: 'Forum not found' }, { status: 404 })
+    return json({ error: error.message || 'Forum not found' }, { status: 404 })
   }
 }
 
@@ -17,25 +16,21 @@ export async function PUT({ params, request }) {
   try {
     const { id } = params
     const body = await request.json()
-    const validatedForum = forumSchema.parse(body)
-    
-    const record = await pb.collection('forums').update(id, validatedForum)
-    
-    return json(record)
+    const updatedForum = await updateForum(id, body)
+    return json(updatedForum)
   } catch (error) {
     console.error('Error updating forum:', error)
-    return json({ error: 'Failed to update forum' }, { status: 400 })
+    return json({ error: error.message || 'Failed to update forum' }, { status: 400 })
   }
 }
 
 export async function DELETE({ params }) {
   try {
     const { id } = params
-    await pb.collection('forums').delete(id)
-    
+    await deleteForum(id)
     return new Response(null, { status: 204 })
   } catch (error) {
     console.error('Error deleting forum:', error)
-    return json({ error: 'Failed to delete forum' }, { status: 400 })
+    return json({ error: error.message || 'Failed to delete forum' }, { status: 400 })
   }
 }

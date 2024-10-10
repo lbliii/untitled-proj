@@ -1,38 +1,23 @@
 import { json } from '@sveltejs/kit'
-import { pb } from '$lib/pocketbase'
-import { forumSchema } from '$lib/schemas/forum'
+import { createForum, getTopLevelForums } from '$lib/services/forum'
 
 export async function GET() {
   try {
-    const forums = await pb.collection('forums').getFullList({
-      sort: '-created',
-      expand: 'owner,genre,subforums',
-    });
-
-    const validatedForums = forums.map(forum => forumSchema.parse({
-      ...forum,
-      owner: forum.expand?.owner?.id || forum.owner || null,
-      genre: forum.expand?.genre?.name || null,
-      // ... other fields ...
-    }));
-
-    return json({ forums: validatedForums });
+    const forums = await getTopLevelForums()
+    return json({ forums })
   } catch (error) {
-    console.error('Error fetching forums:', error);
-    return json({ error: 'Failed to fetch forums' }, { status: 500 });
+    console.error('Error fetching forums:', error)
+    return json({ error: 'Failed to fetch forums' }, { status: 500 })
   }
 }
 
 export async function POST({ request }) {
   try {
     const body = await request.json()
-    const validatedForum = forumSchema.parse(body)
-    
-    const record = await pb.collection('forums').create(validatedForum)
-    
-    return json(record, { status: 201 })
+    const newForum = await createForum(body)
+    return json(newForum, { status: 201 })
   } catch (error) {
     console.error('Error creating forum:', error)
-    return json({ error: 'Failed to create forum' }, { status: 400 })
+    return json({ error: error.message || 'Failed to create forum' }, { status: 400 })
   }
 }

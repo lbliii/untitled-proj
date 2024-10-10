@@ -6,13 +6,16 @@ export const forumSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string(),
-  genre: z.string().or(genreSchema).nullable().optional(),
+  genre: z.string().optional(),
   createdAt: z.preprocess((arg) => {
     if (typeof arg === 'string' || arg instanceof Date) return new Date(arg)
   }, z.date()).optional().default(new Date()),
   slug: z.string().optional().default(''),
   owner: z.string().nullable(),
-  parent_forum: z.string().nullable()
+  parent_forum: z.string().nullable(),
+  expand: z.object({
+    genre: genreSchema,
+  }).optional()
 })
 
 export const subforumSchema = forumSchema.extend({
@@ -25,7 +28,6 @@ export const forumResponseSchema = z.object({
   threads: z.array(threadSchema),
   currentPage: z.number(),
   totalPages: z.number(),
-  user: z.any().optional() // You might want to create a proper user schema
 })
 
 export const forumListSchema = z.array(forumSchema)
@@ -43,15 +45,26 @@ export const paginatedForumListSchema = z.object({
 })
 
 export const createForumSchema = z.object({
-  genre: z.string().optional(),
+  genre: z.string().min(1, 'Genre is required'),
   parent_forum: z.string().optional(),
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
-  is_global: z.boolean().optional(),
   image: z.instanceof(Blob).optional(),
   premise: z.string().optional(),
   guidelines: z.string().optional(),
-  owner: z.string().optional()
+  owner: z.string().min(1, 'Owner is required'),
+  slug: z.string().min(1, 'Slug is required')
 })
+
+
+export const updateForumSchema = createForumSchema.partial().refine(
+  (data) => {
+    // Ensure that at least one field is being updated
+    return Object.keys(data).length > 0
+  },
+  {
+    message: 'At least one field must be updated',
+  },
+)
 
 export type Forum = z.infer<typeof forumSchema>

@@ -1,33 +1,44 @@
 <script lang="ts">
-    export let forum: {
-        id: string;
-        name: string;
-        description: string;
-        genre: string | null;
-        createdAt: string;
-        slug: string;
-    };
+    import type { Forum } from '$lib/schemas/forum'
+    import { goto } from '$app/navigation';
+    export let forums: Forum[]
+
+    function navigateToForum(forumId: string) {
+        goto(`/forums/${forumId}`);
+    }
 </script>
 
-<div class="forum-tile">
-    <a href="/forums/{forum.name}">
-    <h3>{forum.name}</h3>
-    <p>{forum.description}</p>
-    {#if forum.genre}
-        <span class="genre">{forum.genre}</span>
-    {/if}
-    </a>
-</div>
-
-
-<style>
-    .forum-tile {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 1rem;
-    }
-    .genre {
-        font-size: 0.8rem;
-        color: #666;
-    }
-</style>
+{#if forums.length === 0}
+    <p class="text-center">No forums found.</p>
+{:else}
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {#each forums as forum (forum.id)}
+            <button
+                class="relative group focus:outline-none"
+                on:click={() => navigateToForum(forum.id)}
+                aria-label={`Open forum ${forum.name}`}
+            >
+                <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="absolute inset-0 flex flex-col justify-end p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <h2 class="text-lg font-bold truncate">
+                        {forum.name}
+                    </h2>
+                    {#if forum.description}
+                        <p class="text-sm line-clamp-2">{forum.description}</p>
+                    {/if}
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        {#if forum}
+                            <span class="text-xs bg-white/20 px-2 py-1 rounded">Public</span>
+                        {/if}
+                    </div>
+                </div>
+                <div class="w-full h-full bg-gray-700 rounded-lg overflow-hidden">
+                    <!-- Replace with actual forum image if available -->
+                    <div class="w-full h-full flex items-center justify-center text-white text-4xl font-bold">
+                        {forum.name[0]}
+                    </div>
+                </div>
+            </button>
+        {/each}
+    </div>
+{/if}

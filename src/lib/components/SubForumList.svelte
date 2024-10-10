@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { Forum } from '$lib/schemas/forum'
-  import { goto } from '$app/navigation';
   export let forums: Forum[]
 </script>
 
@@ -13,7 +12,7 @@
         <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div class="absolute inset-0 flex flex-col justify-end p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <h2 class="text-lg font-bold truncate">
-            <a href="/forums/{forum.id}" class="hover:underline">{forum.name}</a>
+            <a href="/forums/{forum.parent_forum}/{forum.id}" class="hover:underline">{forum.name}</a>
           </h2>
           {#if forum.description}
             <p class="text-sm line-clamp-2">{forum.description}</p>

@@ -4,7 +4,7 @@ import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { error, fail } from '@sveltejs/kit';
 import { validateData } from '$lib/utils';
-import { createGuestBookPostSchema, likeGuestBookPostSchema } from '$lib/schemas/guestbookSchemas';
+import { createGuestBookPostSchema, likeGuestBookPostSchema } from '$lib/schemas/guestbook';
 
 interface CustomError {
     status: number;

@@ -1,13 +1,18 @@
 import { z } from 'zod'
+import { threadSchema } from './threadSchemas'
+import { genreSchema } from './genreSchemas'
 
 export const forumSchema = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string().optional().nullable(),
-  genre: z.string().nullable(),
-  createdAt: z.string().optional(),
-  slug: z.string().optional(),
-  owner: z.string().nullable()  // Allow null values for owner
+  description: z.string(),
+  genre: z.string().or(genreSchema).nullable().optional(),
+  createdAt: z.preprocess((arg) => {
+    if (typeof arg === 'string' || arg instanceof Date) return new Date(arg)
+  }, z.date()).optional().default(new Date()),
+  slug: z.string().optional().default(''),
+  owner: z.string().nullable(),
+  parent_forum: z.string().nullable()
 })
 
 export const subforumSchema = forumSchema.extend({
@@ -15,15 +20,18 @@ export const subforumSchema = forumSchema.extend({
 })
 
 export const forumResponseSchema = z.object({
-  forum: forumSchema.extend({
-    subforums: z.array(subforumSchema).optional(),
-  }),
+  forum: forumSchema,
+  subforums: z.array(forumSchema),
+  threads: z.array(threadSchema),
+  currentPage: z.number(),
+  totalPages: z.number(),
+  user: z.any().optional() // You might want to create a proper user schema
 })
 
 export const forumListSchema = z.array(forumSchema)
 
 export const forumsResponseSchema = z.object({
-  forums: forumListSchema,
+  forums: forumListSchema
 })
 
 export const paginatedForumListSchema = z.object({

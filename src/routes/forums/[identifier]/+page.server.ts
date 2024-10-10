@@ -1,9 +1,12 @@
 import { error } from '@sveltejs/kit'
 import { pb } from '$lib/pocketbase'
 import { forumResponseSchema, forumSchema } from '$lib/schemas/forumSchemas'
+import { threadSchema } from '$lib/schemas/threadSchemas'
 
-export async function load({ params }) {
+export async function load({ params, url }) {
   const { identifier } = params
+  const page = +(url.searchParams.get('page') ?? '1')
+  const perPage = 20
   let forumData
 
   // Try to fetch by ID
@@ -36,25 +39,45 @@ export async function load({ params }) {
   console.log('Raw forum data:', JSON.stringify(forumData, null, 2))
 
   try {
-    // Validate the basic forum data first
+    // Validate the basic forum data
     const validatedForum = forumSchema.parse({
       id: forumData.id,
       name: forumData.name,
       description: forumData.description,
       genre: forumData.expand?.genre?.name || null,
       createdAt: forumData.created,
-      slug: forumData.slug,
-      owner: forumData.expand?.owner?.id || forumData.owner || null
+      slug: forumData.slug || '',
+      owner: forumData.owner || null,
+      parent_forum: forumData.parent_forum || null
     })
 
-    console.log('Validated forum data:', JSON.stringify(validatedForum, null, 2))
+    // Fetch subforums (children of the current forum)
+    const subforumsResponse = await pb.collection('forums').getList(1, 50, {
+      filter: `parent_forum="${forumData.id}"`,
+      sort: 'name'
+    })
 
-    // Now validate the entire response, including subforums
+    // Validate subforums
+    const validatedSubforums = subforumsResponse.items.map(subforum => forumSchema.parse(subforum))
+
+    // Fetch threads for the current forum
+    const threadsResponse = await pb.collection('threads').getList(page, perPage, {
+      filter: `forum="${forumData.id}"`,
+      sort: '-created',
+      expand: 'author'
+    })
+
+    // Validate threads
+    const validatedThreads = threadsResponse.items.map(thread => threadSchema.parse(thread))
+
+    // Validate the entire response
     const validatedResponse = forumResponseSchema.parse({
-      forum: {
-        ...validatedForum,
-        subforums: forumData.expand?.subforums || [],
-      },
+      forum: validatedForum,
+      subforums: validatedSubforums,
+      threads: validatedThreads,
+      currentPage: page,
+      totalPages: Math.ceil(threadsResponse.totalItems / perPage),
+      user: pb.authStore.model
     })
 
     console.log('Validated response:', JSON.stringify(validatedResponse, null, 2))

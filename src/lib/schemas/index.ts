@@ -1,5 +1,5 @@
-export * from './userSchemas'
-export * from './genreSchemas'
+export * as UserSchemas from './userSchemas'
+export * as GenreSchemas from './genreSchemas'
 export * from './characterSchemas'
 export * from './wantedAdSchemas'
 export * from './threadSchemas'

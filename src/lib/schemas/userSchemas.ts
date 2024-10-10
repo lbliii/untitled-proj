@@ -9,8 +9,8 @@ export const UserSchema = z.object({
   verified: z.boolean(),
   emailVisibility: z.boolean(),
   email: z.string().email(),
-  created: z.string().datetime(),
-  updated: z.string().datetime(),
+  created: z.preprocess((arg) => new Date(arg), z.date()),
+  updated: z.preprocess((arg) => new Date(arg), z.date()),
   avatar: z.string().optional(),
   name: z.string(),
   division: z.string(),
@@ -20,7 +20,7 @@ export const UserSchema = z.object({
   following: z.array(z.string()),
   badges: z.array(z.string()),
   post: z.string().optional(),
-  last_login: z.string().datetime().optional(),
+  last_login: z.preprocess((arg) => new Date(arg), z.date()).optional(),
 })
 
 export const loginUserSchema = z.object({
@@ -123,27 +123,8 @@ export const updateProfileSchema = z.object({
     .max(64, { message: 'Job Title must be 64 characters or less' })
     .trim(),
 
-  avatar: z
-    .instanceof(Blob)
-    .optional()
-    .superRefine((val, ctx) => {
-      if (val) {
-        if (val.size > 5242880) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'Avatar must be less than 5MB',
-          })
-        }
-
-        if (!imageTypes.includes(val.type)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message:
-              'Unsupported file type. Supported formats: jpeg, jpg, png, webp, svg, gif',
-          })
-        }
-      }
-    }),
+  avatarFile: z.instanceof(Blob).optional(),
+  avatarUrl: z.string().url().optional(),
 })
 
 export type User = z.infer<typeof UserSchema>

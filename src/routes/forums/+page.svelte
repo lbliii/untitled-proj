@@ -1,43 +1,35 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { forumsResponseSchema } from '$lib/archive-schemas';
-  import type { z } from 'zod';
-  import ForumList from '$lib/components/ForumList.svelte';
+  import GenreSection from '$lib/components/GenreSection.svelte';
+  import type { Forum } from '$lib/schemas/forumSchemas';
+  export let data: { forums: Forum[]; error?: string };
 
-  type ForumsResponse = z.infer<typeof forumsResponseSchema>;
-  type Forum = ForumsResponse['forums'][number];
+  // Function to group forums by genre
+  function groupForumsByGenre(forums: Forum[]): { [genre: string]: Forum[] } {
+    return forums.reduce((acc, forum) => {
+      const genre = forum.genre || 'Uncategorized';
+      if (!acc[genre]) {
+        acc[genre] = [];
+      }
+      acc[genre].push(forum);
+      return acc;
+    }, {} as { [genre: string]: Forum[] });
+  }
 
-  let forums: Forum[] = [];
-  let loading = true;
-  let error: string | null = null;
+  // Reactive statement to update forumsByGenre whenever data.forums changes
+  $: forumsByGenre = data.forums ? groupForumsByGenre(data.forums) : {};
 
-  onMount(async () => {
-    try {
-      const response = await fetch('/api/forums');
-      if (!response.ok) throw new Error('Failed to fetch forums');
-      const data = await response.json();
-      const validatedData = forumsResponseSchema.parse(data);
-      forums = validatedData.forums;
-    } catch (e) {
-      error = e instanceof Error ? e.message : 'An unknown error occurred';
-    } finally {
-      loading = false;
-    }
-  });
+  // Generate a sorted array of genres
+  $: sortedGenres = Object.keys(forumsByGenre).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 </script>
 
-<svelte:head>
-  <title>Forums | Your App Name</title>
-</svelte:head>
-
-<div class="container mx-auto p-4">
-  <h1 class="text-3xl font-bold mb-6">Forums</h1>
-
-  {#if loading}
-    <p class="text-center">Loading forums...</p>
-  {:else if error}
-    <p class="text-error text-center">{error}</p>
-  {:else}
-    <ForumList {forums} />
-  {/if}
-</div>
+{#if data.error}
+  <div class="p-4 bg-red-100 text-red-700 rounded">
+    <p>Error: {data.error}</p>
+  </div>
+{:else if Object.keys(forumsByGenre).length > 0}
+  {#each sortedGenres as genre}
+    <GenreSection genre={genre} forums={forumsByGenre[genre]} />
+  {/each}
+{:else}
+  <p class="text-center text-gray-500">Loading forums...</p>
+{/if}
